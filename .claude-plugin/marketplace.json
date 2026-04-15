@@ -1,0 +1,17 @@
+{
+  "name": "codedby-claude-box-paste",
+  "owner": {
+    "name": "codedby-kr"
+  },
+  "metadata": {
+    "description": "Claude Code 터미널(conhost / pwsh / Windows Terminal)에서 Shift+Insert·Ctrl+V 붙여넣기를 활성화하는 플러그인"
+  },
+  "plugins": [
+    {
+      "name": "terminal-paste",
+      "source": "./plugins/terminal-paste",
+      "description": "AutoHotkey 기반 Shift+Insert / Ctrl+V 붙여넣기 활성화 (Windows 콘솔 전용)",
+      "version": "1.0.0"
+    }
+  ]
+}
