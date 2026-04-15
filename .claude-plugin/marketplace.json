@@ -1,7 +1,7 @@
 {
   "name": "codedby-claude-box-paste",
   "owner": {
-    "name": "codedby-kr"
+    "name": "as01041967831-svg"
   },
   "metadata": {
     "description": "Claude Code 터미널(conhost / pwsh / Windows Terminal)에서 Shift+Insert·Ctrl+V 붙여넣기를 활성화하는 플러그인"

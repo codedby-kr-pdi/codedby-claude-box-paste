@@ -22,7 +22,7 @@ AutoHotkey v2 스크립트로 클립보드 텍스트를 `SendText`로 직접 전
 ## 설치
 
 ```
-/plugin marketplace add codedby-kr/codedby-claude-box-paste
+/plugin marketplace add as01041967831-svg/codedby-claude-box-paste
 /plugin install terminal-paste@codedby-claude-box-paste
 /terminal-paste:install
 ```
