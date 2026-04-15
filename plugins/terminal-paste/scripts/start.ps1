@@ -1,5 +1,5 @@
 # terminal-paste: start
-# AHK 스크립트를 수동으로 실행 (재부팅 없이 즉시 적용)
+# Launch the AHK script manually (no reboot required)
 
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'
@@ -9,9 +9,9 @@ $StartupDir = [Environment]::GetFolderPath('Startup')
 $StartupAhk = Join-Path $StartupDir 'shift-insert-paste.ahk'
 $LocalAhk   = Join-Path $PluginRoot 'scripts\shift-insert-paste.ahk'
 
-# Startup에 설치된 버전 우선, 없으면 플러그인 내부 파일 사용
+# Prefer the version in Startup; fall back to the plugin-internal copy
 $AhkScript = if (Test-Path $StartupAhk) { $StartupAhk } else { $LocalAhk }
-if (-not (Test-Path $AhkScript)) { throw "AHK 스크립트 없음: $AhkScript (먼저 /terminal-paste:install 실행)" }
+if (-not (Test-Path $AhkScript)) { throw "AHK script not found: $AhkScript (run /terminal-paste:install first)" }
 
 function Find-AutoHotkey {
     $candidates = @(
@@ -26,10 +26,10 @@ function Find-AutoHotkey {
 }
 
 $ahk = Find-AutoHotkey
-if (-not $ahk) { throw 'AutoHotkey v2 미설치. /terminal-paste:install 먼저 실행.' }
+if (-not $ahk) { throw 'AutoHotkey v2 not installed. Run /terminal-paste:install first.' }
 
-# 이미 같은 스크립트가 돌고 있으면 재시작
+# Restart if already running
 & (Join-Path $PSScriptRoot 'stop.ps1') | Out-Null
 
 Start-Process -FilePath $ahk -ArgumentList "`"$AhkScript`""
-Write-Host "[terminal-paste] 실행됨: $AhkScript" -ForegroundColor Green
+Write-Host "[terminal-paste] Running: $AhkScript" -ForegroundColor Green

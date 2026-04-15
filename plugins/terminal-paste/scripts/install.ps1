@@ -1,7 +1,7 @@
 # terminal-paste: install
-# 1) AutoHotkey v2 설치 (이미 있으면 건너뜀)
-# 2) .ahk 스크립트를 Startup 폴더에 복사 → 부팅 시 자동 실행
-# 3) 지금 바로 실행
+# 1) Install AutoHotkey v2 (skipped if already present)
+# 2) Copy .ahk to Startup folder (auto-run on boot)
+# 3) Launch immediately
 
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
 
@@ -24,22 +24,22 @@ function Find-AutoHotkey {
     return $null
 }
 
-# 1) AutoHotkey 설치
+# 1) Install AutoHotkey
 $ahk = Find-AutoHotkey
 if (-not $ahk) {
-    Write-Host '[terminal-paste] AutoHotkey v2 미설치 → winget으로 설치' -ForegroundColor Yellow
+    Write-Host '[terminal-paste] AutoHotkey v2 not found. Installing via winget...' -ForegroundColor Yellow
     winget install --id AutoHotkey.AutoHotkey -e --accept-source-agreements --accept-package-agreements
     $ahk = Find-AutoHotkey
-    if (-not $ahk) { throw 'AutoHotkey 설치 실패. winget 수동 실행 필요.' }
+    if (-not $ahk) { throw 'AutoHotkey install failed. Run winget manually.' }
 }
 Write-Host "[terminal-paste] AutoHotkey: $ahk" -ForegroundColor Green
 
-# 2) Startup에 복사
-if (-not (Test-Path $AhkSource)) { throw "소스 파일 없음: $AhkSource" }
+# 2) Copy to Startup
+if (-not (Test-Path $AhkSource)) { throw "Source not found: $AhkSource" }
 Copy-Item -Path $AhkSource -Destination $AhkDest -Force
-Write-Host "[terminal-paste] 자동 실행 등록: $AhkDest" -ForegroundColor Green
+Write-Host "[terminal-paste] Auto-run registered: $AhkDest" -ForegroundColor Green
 
-# 3) 지금 실행 (이미 실행 중이면 재시작)
+# 3) Launch (restart if already running)
 & (Join-Path $PSScriptRoot 'stop.ps1') | Out-Null
 Start-Process -FilePath $ahk -ArgumentList "`"$AhkDest`""
-Write-Host '[terminal-paste] 실행 완료. Shift+Insert / Ctrl+V 사용 가능.' -ForegroundColor Green
+Write-Host '[terminal-paste] Running. Shift+Insert / Ctrl+V paste is active.' -ForegroundColor Green
