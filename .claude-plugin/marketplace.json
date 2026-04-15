@@ -11,7 +11,7 @@
       "name": "terminal-paste",
       "source": "./plugins/terminal-paste",
       "description": "AutoHotkey 기반 Shift+Insert / Ctrl+V 붙여넣기 활성화 (Windows 콘솔 전용)",
-      "version": "1.1.0"
+      "version": "1.2.0"
     }
   ]
 }

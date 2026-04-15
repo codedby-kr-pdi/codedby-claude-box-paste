@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-; 콘솔 (cmd, conhost, pwsh) — 클립보드 텍스트를 직접 전송
+; Console (cmd, conhost, pwsh) -- send clipboard text directly
 #HotIf WinActive("ahk_class ConsoleWindowClass")
 +Insert::SendText(A_Clipboard)
 ^v::SendText(A_Clipboard)
@@ -11,6 +11,6 @@
 +Insert::SendText(A_Clipboard)
 ^v::SendText(A_Clipboard)
 
-; 그 외 모든 앱 — 표준 붙여넣기(Ctrl+V)로 대체
+; All other apps -- fall back to standard paste (Ctrl+V)
 #HotIf
 +Insert::SendInput("^v")

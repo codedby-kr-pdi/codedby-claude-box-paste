@@ -6,8 +6,8 @@ $ErrorActionPreference = 'Stop'
 
 $PluginRoot = if ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { Split-Path -Parent $PSScriptRoot }
 $StartupDir = [Environment]::GetFolderPath('Startup')
-$StartupAhk = Join-Path $StartupDir 'shift-insert-paste.ahk'
-$LocalAhk   = Join-Path $PluginRoot 'scripts\shift-insert-paste.ahk'
+$StartupAhk = Join-Path $StartupDir 'codedby-text-paste.ahk'
+$LocalAhk   = Join-Path $PluginRoot 'scripts\codedby-text-paste.ahk'
 
 # Prefer the version in Startup; fall back to the plugin-internal copy
 $AhkScript = if (Test-Path $StartupAhk) { $StartupAhk } else { $LocalAhk }
