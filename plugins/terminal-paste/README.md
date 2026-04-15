@@ -1,25 +1,27 @@
 # terminal-paste
 
-Windows 콘솔(conhost / pwsh / Windows Terminal)에서 Claude Code CLI 실행 시 **Shift+Insert** 및 **Ctrl+V** 붙여넣기를 활성화하는 플러그인.
+Enables **Shift+Insert** and **Ctrl+V** paste inside Claude Code CLI running in Windows consoles (conhost / pwsh / Windows Terminal).
 
-AutoHotkey v2 스크립트로 클립보드 텍스트를 `SendText`로 직접 전송하여, Claude Code 프롬프트에 안정적으로 붙여넣기가 된다.
+An AutoHotkey v2 script sends the clipboard directly via `SendText`, so paste works reliably at the Claude Code prompt.
 
-## 동작 방식
+## How it works
 
-- `ConsoleWindowClass` (legacy conhost, pwsh) → Shift+Insert / Ctrl+V → 클립보드 텍스트 직접 전송
-- `CASCADIA_HOSTING_WINDOW_CLASS` (Windows Terminal) → 동일
-- 그 외 앱 → Shift+Insert를 표준 Ctrl+V로 매핑
+- `ConsoleWindowClass` (legacy conhost, pwsh) → Shift+Insert / Ctrl+V → direct clipboard text send
+- `CASCADIA_HOSTING_WINDOW_CLASS` (Windows Terminal) → same
+- Other apps → Shift+Insert mapped to standard Ctrl+V
 
-## 슬래시 커맨드
+## Slash commands
 
-| 커맨드 | 설명 |
+| Command | Description |
 |---|---|
-| `/terminal-paste:install` | AutoHotkey 설치(winget) + Startup 등록 + 즉시 실행 |
-| `/terminal-paste:start` | 수동 실행 (재부팅 없이 적용) |
-| `/terminal-paste:stop` | 실행 중인 프로세스 종료 |
-| `/terminal-paste:uninstall` | Startup 해제 + 종료 (AHK 본체는 유지) |
+| `/terminal-paste:install` | Install AutoHotkey (winget/direct/choco fallback chain) + register in Startup + launch |
+| `/terminal-paste:start` | Launch manually (no reboot) |
+| `/terminal-paste:stop` | Stop the running process |
+| `/terminal-paste:uninstall` | Remove from Startup + stop process (AutoHotkey itself is kept) |
 
-## 설치
+Korean variants (`:install.ko`, `:start.ko`, etc.) are also available.
+
+## Install
 
 ```
 /plugin marketplace add codedby-kr-pdi/codedby-claude-box-paste
@@ -27,31 +29,34 @@ AutoHotkey v2 스크립트로 클립보드 텍스트를 `SendText`로 직접 전
 /terminal-paste:install
 ```
 
-`install` 실행 시 AutoHotkey 미설치면 `winget`으로 설치되며 UAC 프롬프트가 뜰 수 있습니다.
+On first install, AutoHotkey is installed via a fallback chain: `winget` → direct download from autohotkey.com → `choco`. If all three fail, a guidance message is shown.
 
-## 요구사항
+## Requirements
 
-- **Windows 10 (1809 이상) 또는 Windows 11** — `[Environment]::GetFolderPath('Startup')` 및 `winget` 의존
-- **PowerShell 5.1 이상** (Windows 기본 포함) 또는 PowerShell 7
-- **`winget` (Windows App Installer)** — 구버전 Windows 10 / LTSC / Server에는 기본 미포함. Microsoft Store에서 "앱 설치 관리자"로 설치
-- **인터넷 연결** — winget이 AutoHotkey를 다운로드
-- **사용자 본인의 UAC 허용 권한** — AHK 최초 설치 시 winget이 관리자 권한을 요구하므로 UAC 프롬프트가 뜸
-- **AutoHotkey v2 64-bit 호환 환경** — 64-bit Windows 필요 (32-bit Windows는 비지원)
+- **Windows 10 (1809+) or Windows 11** — required for `[Environment]::GetFolderPath('Startup')` and `winget`
+- **PowerShell 5.1+** (Windows default) or PowerShell 7
+- **At least one of**: `winget`, internet access (for direct download), or `choco`
+- **User privilege to approve UAC** — the first AHK install requires admin elevation
+- **64-bit Windows** — AutoHotkey v2 64-bit is required
 
-## 트러블슈팅
+## Troubleshooting
 
-### `winget: command not found` 류 오류
-Windows App Installer 미설치 환경입니다. Microsoft Store에서 "앱 설치 관리자" 설치 후 재시도.
+### All three install methods failed
+The script shows a banner with the failing methods. Download AHK v2 manually from https://www.autohotkey.com/download/ and rerun `/terminal-paste:install` — the installed AHK will be detected and installation step skipped.
 
-### UAC 프롬프트가 안 보임
-Claude Code 창 뒤에 가려진 경우가 많습니다. 작업 표시줄에 깜빡이는 "사용자 계정 컨트롤" 아이콘을 확인하세요.
+### UAC prompt not visible
+It may be hidden behind the Claude Code window. Check the taskbar for a blinking "User Account Control" icon.
 
-### ExecutionPolicy 거부 (기업 PC)
-MDM/GPO로 PowerShell 실행 정책이 잠긴 환경에서는 `-ExecutionPolicy Bypass`가 무력화될 수 있습니다. IT 관리자에게 문의하거나 관리자 권한의 PowerShell에서 수동 실행 필요.
+### ExecutionPolicy blocked (corporate machines)
+If PowerShell ExecutionPolicy is locked by MDM/GPO, `-ExecutionPolicy Bypass` may be ignored. Contact your IT admin or run installation manually from an admin PowerShell.
 
-### 이미 AHK가 설치된 PC
-`Find-AutoHotkey`가 기존 설치를 탐지해 winget 단계를 건너뜁니다. UAC도 뜨지 않고 Startup 등록 + 프로세스 실행만 진행됩니다.
+### AHK already installed
+`Find-AutoHotkey` detects the existing installation and skips the install step — no UAC prompt, only Startup registration and process launch happen.
 
-## 라이선스
+## License
 
 MIT
+
+---
+
+한국어 문서: [README.ko.md](./README.ko.md)
