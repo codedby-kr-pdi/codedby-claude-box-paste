@@ -1,7 +1,7 @@
 {
   "name": "terminal-paste",
   "description": "Enable Shift+Insert and Ctrl+V paste inside Claude Code CLI running in pwsh/conhost/Windows Terminal via AutoHotkey",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "codedby-kr-pdi"
   },

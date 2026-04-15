@@ -12,7 +12,6 @@ $PluginRoot = if ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { Sp
 $AhkSource  = Join-Path $PluginRoot 'scripts\codedby-text-paste.ahk'
 $StartupDir = [Environment]::GetFolderPath('Startup')
 $AhkDest    = Join-Path $StartupDir 'codedby-text-paste.ahk'
-$LegacyDest = Join-Path $StartupDir 'shift-insert-paste.ahk'
 
 function Find-AutoHotkey {
     $candidates = @(
@@ -109,16 +108,12 @@ if (-not $ahk) {
 }
 Write-Host "[terminal-paste] AutoHotkey: $ahk" -ForegroundColor Green
 
-# 2) Copy to Startup (remove legacy file if present)
+# 2) Copy to Startup
 if (-not (Test-Path $AhkSource)) { throw "Source not found: $AhkSource" }
-if (Test-Path $LegacyDest) {
-    Remove-Item $LegacyDest -Force -ErrorAction SilentlyContinue
-    Write-Host "[terminal-paste] Removed legacy file: $LegacyDest" -ForegroundColor DarkGray
-}
 Copy-Item -Path $AhkSource -Destination $AhkDest -Force
 Write-Host "[terminal-paste] Auto-run registered: $AhkDest" -ForegroundColor Green
 
-# 3) Launch (restart if already running; stop.ps1 also kills legacy processes)
+# 3) Launch (restart if already running)
 & (Join-Path $PSScriptRoot 'stop.ps1') | Out-Null
 Start-Process -FilePath $ahk -ArgumentList "`"$AhkDest`""
 Write-Host '[terminal-paste] Running. Shift+Insert / Ctrl+V paste is active.' -ForegroundColor Green

@@ -5,17 +5,11 @@
 
 & (Join-Path $PSScriptRoot 'stop.ps1') | Out-Null
 
-$StartupDir = [Environment]::GetFolderPath('Startup')
-$removed = $false
-foreach ($name in 'codedby-text-paste.ahk','shift-insert-paste.ahk') {
-    $path = Join-Path $StartupDir $name
-    if (Test-Path $path) {
-        Remove-Item $path -Force
-        Write-Host "[terminal-paste] Auto-run removed: $path" -ForegroundColor Green
-        $removed = $true
-    }
-}
-if (-not $removed) {
+$StartupAhk = Join-Path ([Environment]::GetFolderPath('Startup')) 'codedby-text-paste.ahk'
+if (Test-Path $StartupAhk) {
+    Remove-Item $StartupAhk -Force
+    Write-Host "[terminal-paste] Auto-run removed: $StartupAhk" -ForegroundColor Green
+} else {
     Write-Host '[terminal-paste] No file registered in Startup' -ForegroundColor DarkGray
 }
 
