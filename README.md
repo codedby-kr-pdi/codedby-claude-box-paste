@@ -13,7 +13,7 @@ Claude Code 마켓플레이스 — Windows 콘솔 환경에서 붙여넣기 UX�
 Claude Code CLI에서:
 
 ```
-/plugin marketplace add as01041967831-svg/codedby-claude-box-paste
+/plugin marketplace add codedby-kr-pdi/codedby-claude-box-paste
 /plugin install terminal-paste@codedby-claude-box-paste
 ```
 
@@ -31,4 +31,4 @@ Claude Code CLI에서:
 
 ## 라이선스
 
-MIT © as01041967831-svg
+MIT © codedby-kr-pdi

@@ -3,8 +3,8 @@
   "description": "Enable Shift+Insert and Ctrl+V paste inside Claude Code CLI running in pwsh/conhost/Windows Terminal via AutoHotkey",
   "version": "1.0.0",
   "author": {
-    "name": "as01041967831-svg"
+    "name": "codedby-kr-pdi"
   },
-  "repository": "https://github.com/as01041967831-svg/codedby-claude-box-paste",
+  "repository": "https://github.com/codedby-kr-pdi/codedby-claude-box-paste",
   "license": "MIT"
 }
