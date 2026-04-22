@@ -14,10 +14,10 @@ An AutoHotkey v2 script sends the clipboard directly via `SendText`, so paste wo
 
 | Command | Description |
 |---|---|
-| `/terminal-paste:install` | Install AutoHotkey (winget/direct/choco fallback chain) + register in Startup + launch |
-| `/terminal-paste:start` | Launch manually (no reboot) |
+| `/terminal-paste:install` | Install AutoHotkey (winget/direct/choco fallback chain) + launch |
+| `/terminal-paste:start` | Launch manually |
 | `/terminal-paste:stop` | Stop the running process |
-| `/terminal-paste:uninstall` | Remove from Startup + stop process (AutoHotkey itself is kept) |
+| `/terminal-paste:uninstall` | Stop the running process (AutoHotkey itself is kept) |
 
 Korean variants (`:install.ko`, `:start.ko`, etc.) are also available.
 
@@ -31,9 +31,13 @@ Korean variants (`:install.ko`, `:start.ko`, etc.) are also available.
 
 On first install, AutoHotkey is installed via a fallback chain: `winget` → direct download from autohotkey.com → `choco`. If all three fail, a guidance message is shown.
 
+### Auto-launch
+
+Once installed, the AHK script is launched automatically at the start of every Claude Code session by the plugin's `SessionStart` hook (`hooks/hooks.json`). If an instance is already running, the hook is a no-op. The script runs as a detached process, so it survives after you exit Claude Code until the next reboot or `/terminal-paste:stop`.
+
 ## Requirements
 
-- **Windows 10 (1809+) or Windows 11** — required for `[Environment]::GetFolderPath('Startup')` and `winget`
+- **Windows 10 (1809+) or Windows 11** — required for `winget`
 - **PowerShell 5.1+** (Windows default) or PowerShell 7
 - **At least one of**: `winget`, internet access (for direct download), or `choco`
 - **User privilege to approve UAC** — the first AHK install requires admin elevation
@@ -51,7 +55,7 @@ It may be hidden behind the Claude Code window. Check the taskbar for a blinking
 If PowerShell ExecutionPolicy is locked by MDM/GPO, `-ExecutionPolicy Bypass` may be ignored. Contact your IT admin or run installation manually from an admin PowerShell.
 
 ### AHK already installed
-`Find-AutoHotkey` detects the existing installation and skips the install step — no UAC prompt, only Startup registration and process launch happen.
+`Find-AutoHotkey` detects the existing installation and skips the install step — no UAC prompt, only the immediate launch happens.
 
 ## License
 

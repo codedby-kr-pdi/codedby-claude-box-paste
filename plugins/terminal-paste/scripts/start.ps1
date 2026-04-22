@@ -5,12 +5,7 @@
 $ErrorActionPreference = 'Stop'
 
 $PluginRoot = if ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { Split-Path -Parent $PSScriptRoot }
-$StartupDir = [Environment]::GetFolderPath('Startup')
-$StartupAhk = Join-Path $StartupDir 'codedby-text-paste.ahk'
-$LocalAhk   = Join-Path $PluginRoot 'scripts\codedby-text-paste.ahk'
-
-# Prefer the version in Startup; fall back to the plugin-internal copy
-$AhkScript = if (Test-Path $StartupAhk) { $StartupAhk } else { $LocalAhk }
+$AhkScript  = Join-Path $PluginRoot 'scripts\codedby-text-paste.ahk'
 if (-not (Test-Path $AhkScript)) { throw "AHK script not found: $AhkScript (run /terminal-paste:install first)" }
 
 function Find-AutoHotkey {

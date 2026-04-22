@@ -1,17 +1,16 @@
 # terminal-paste: install
 # 1) Install AutoHotkey v2 (skipped if already present)
 #    Fallback chain: winget -> direct download (autohotkey.com) -> Chocolatey
-# 2) Copy .ahk to Startup folder (auto-run on boot)
-# 3) Launch immediately
+# 2) Launch immediately
+# Auto-run on every Claude Code session is handled by the SessionStart hook
+# (plugins/terminal-paste/hooks/hooks.json) — no Startup folder registration.
 
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
 
 $ErrorActionPreference = 'Stop'
 
 $PluginRoot = if ($env:CLAUDE_PLUGIN_ROOT) { $env:CLAUDE_PLUGIN_ROOT } else { Split-Path -Parent $PSScriptRoot }
-$AhkSource  = Join-Path $PluginRoot 'scripts\codedby-text-paste.ahk'
-$StartupDir = [Environment]::GetFolderPath('Startup')
-$AhkDest    = Join-Path $StartupDir 'codedby-text-paste.ahk'
+$AhkScript  = Join-Path $PluginRoot 'scripts\codedby-text-paste.ahk'
 
 function Find-AutoHotkey {
     $candidates = @(
@@ -108,12 +107,18 @@ if (-not $ahk) {
 }
 Write-Host "[terminal-paste] AutoHotkey: $ahk" -ForegroundColor Green
 
-# 2) Copy to Startup
-if (-not (Test-Path $AhkSource)) { throw "Source not found: $AhkSource" }
-Copy-Item -Path $AhkSource -Destination $AhkDest -Force
-Write-Host "[terminal-paste] Auto-run registered: $AhkDest" -ForegroundColor Green
+if (-not (Test-Path $AhkScript)) { throw "Script not found: $AhkScript" }
 
-# 3) Launch (restart if already running)
+# Migrate from v1.2.x: remove stale copy in Startup folder if present.
+# Since v1.3.0, auto-run is handled by the SessionStart hook instead.
+$StaleStartupAhk = Join-Path ([Environment]::GetFolderPath('Startup')) 'codedby-text-paste.ahk'
+if (Test-Path $StaleStartupAhk) {
+    Remove-Item $StaleStartupAhk -Force -ErrorAction SilentlyContinue
+    Write-Host "[terminal-paste] Removed legacy Startup entry: $StaleStartupAhk" -ForegroundColor DarkGray
+}
+
+# 2) Launch (restart if already running)
 & (Join-Path $PSScriptRoot 'stop.ps1') | Out-Null
-Start-Process -FilePath $ahk -ArgumentList "`"$AhkDest`""
+Start-Process -FilePath $ahk -ArgumentList "`"$AhkScript`""
 Write-Host '[terminal-paste] Running. Shift+Insert / Ctrl+V paste is active.' -ForegroundColor Green
+Write-Host '[terminal-paste] Auto-launch on every Claude Code session is enabled via plugin hook.' -ForegroundColor Green

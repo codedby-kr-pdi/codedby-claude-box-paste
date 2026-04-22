@@ -1,12 +1,13 @@
 ---
-description: Install AutoHotkey (fallback chain) + register in Startup + launch immediately
+description: Install AutoHotkey (fallback chain) and launch the paste script
 allowed-tools: Bash(powershell.exe:*)
 ---
 
 Install terminal-paste. Steps:
 1. Install AutoHotkey v2 if missing, using fallback chain: winget → direct download from autohotkey.com → Chocolatey.
-2. Copy `codedby-text-paste.ahk` into the user's Startup folder (auto-run on boot).
-3. Launch immediately so Shift+Insert / Ctrl+V paste is active right away.
+2. Launch the AHK script immediately so Shift+Insert / Ctrl+V paste is active right away.
+
+Auto-run on every subsequent Claude Code session is handled by the plugin's `SessionStart` hook — no Windows Startup registration is needed.
 
 Run the following:
 
